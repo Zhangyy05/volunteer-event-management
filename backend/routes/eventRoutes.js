@@ -6,8 +6,9 @@ const Volunteer = require('../models/Volunteer');
 // Get all events
 router.get('/', async (req, res) => {
   try {
-    const events = await Event.find().populate('volunteers organizer');
+    const events = await Event.find();
     res.json(events);
+    console.log("hiiiii");
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -9,12 +9,23 @@ router.post('/', async (req, res) => {
   try {
     const query = {};
 
-    if (organizer) query.organizer = organizer;
-    if (startDate && endDate) {
-      query.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    // Add organizer filter if provided
+    if (organizer) {
+      query.organizer = organizer;
     }
 
-    const events = await Event.find(query).populate('volunteers organizer');
+    // Add date range filter if provided
+    if (startDate && endDate) {
+      query.date = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate)
+      };
+    }
+
+    // Fetch filtered events from the database
+    const events = await Event.find(query)
+      .populate('volunteers organizer');
+
     res.json(events);
   } catch (err) {
     res.status(500).json({ message: err.message });

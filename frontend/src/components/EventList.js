@@ -15,6 +15,7 @@ const EventList = ({ onEdit, onDelete }) => {
         setLoading(false);
       } catch (err) {
         console.error(err);
+        console.error('Error details:', err.response || err.message);
         setError('Error fetching events');
         setLoading(false);
       }

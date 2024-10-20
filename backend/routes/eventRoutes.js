@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
 const Volunteer = require('../models/Volunteer');
+const mongoose = require('mongoose');
+
 
 // Get all events
 router.get('/', async (req, res) => {
@@ -55,19 +57,31 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Delete an event
+// Delete an event by ID
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const event = await Event.findById(id);
-    if (!event) return res.status(404).json({ message: 'Event not found' });
+    console.log(`Deleting event with ID: ${id}`);
 
-    await event.remove();
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid event ID' });
+    }
+
+    // Find and delete the event by ID
+    const event = await Event.findByIdAndDelete(id);
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    console.log('Event deleted successfully');
     res.json({ message: 'Event deleted' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error('Error occurred while deleting event:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
+
+
 
 module.exports = router;

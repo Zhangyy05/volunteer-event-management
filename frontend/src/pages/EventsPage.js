@@ -13,12 +13,16 @@ const EventsPage = () => {
 
   const handleDelete = async (eventId) => {
     try {
+      console.log(`Attempting to delete event with ID: ${eventId}`);  
       await axios.delete(`/api/events/${eventId}`);
-      window.location.reload();
+      console.log('Event deleted successfully');
+      window.location.reload();  // Refresh the page after successful deletion
     } catch (err) {
-      console.error(err);
+      console.log("Error occurred during deletion");
+      console.error('Axios error:', err);  
     }
   };
+  
 
   const handleSubmit = async (eventData) => {
     try {

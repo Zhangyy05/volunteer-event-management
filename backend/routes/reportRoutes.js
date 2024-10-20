@@ -1,30 +1,48 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
+const mongoose = require('mongoose');
 
-// Generate report based on filters (organizer and date range)
+
+// Generate report with input validation and parameterized queries
 router.post('/', async (req, res) => {
   const { organizer, startDate, endDate } = req.body;
 
-  try {
-    const query = {};
+  // Validate the organizer
+  if (organizer && !mongoose.Types.ObjectId.isValid(organizer)) {
+    return res.status(400).json({ message: 'Invalid organizer ID' });
+  }
 
-    // Add organizer filter if provided
+  // Validate the dates
+  const start = startDate ? new Date(startDate) : null;
+  const end = endDate ? new Date(endDate) : null;
+  if (startDate && isNaN(start)) {
+    return res.status(400).json({ message: 'Invalid start date' });
+  }
+  if (endDate && isNaN(end)) {
+    return res.status(400).json({ message: 'Invalid end date' });
+  }
+
+  try {
+    // Initialize the query object
+    let query = {};
+
+    // Add parameters to the query
     if (organizer) {
       query.organizer = organizer;
     }
 
-    // Add date range filter if provided
     if (startDate && endDate) {
       query.date = {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate)
+        $gte: start,
+        $lte: end
       };
     }
 
-    // Fetch filtered events from the database
+    // Safely execute the parameterized query
     const events = await Event.find(query)
-      .populate('volunteers organizer');
+      .populate('volunteers organizer')
+      .exec();
 
     res.json(events);
   } catch (err) {

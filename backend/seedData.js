@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-// Load models
 const Volunteer = require('./models/Volunteer');
 const Organizer = require('./models/Organizer');
 const Event = require('./models/Event');
@@ -9,7 +8,6 @@ const Event = require('./models/Event');
 // Load environment variables
 dotenv.config();
 
-// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
@@ -45,18 +43,14 @@ const events = [
   { name: 'Charity Auction', date: '2024-11-10', location: 'Downtown Plaza', duration: 3, maxVolunteers: 30 }
 ];
 
-// Insert data into MongoDB
 const insertData = async () => {
   try {
-    // Insert organizers
     await Organizer.insertMany(organizers);
     console.log('Organizers inserted');
 
-    // Insert volunteers
     await Volunteer.insertMany(volunteers);
     console.log('Volunteers inserted');
 
-    // Randomly assign organizers and volunteers to events
     const allOrganizers = await Organizer.find();
     const allVolunteers = await Volunteer.find();
 
@@ -82,5 +76,5 @@ const insertData = async () => {
   }
 };
 
-// Run the insertion function
+
 insertData();

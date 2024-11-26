@@ -22,7 +22,7 @@ const EditEventModal = ({ event, onClose, onSave }) => {
 
     try {
       const res = await axios.put(`/api/events/${event._id}`, updatedEvent);
-      onSave(res.data);  // Pass the updated event to parent component
+      onSave(res.data); 
     } catch (err) {
       console.error('Error updating event:', err);
     }

@@ -29,14 +29,14 @@ const EventList = ({ onEdit, onDelete }) => {
 
   // Open the modal when clicking edit
   const handleEdit = (event) => {
-    setEditingEvent(event);  // Set the event being edited
-    setIsModalOpen(true);    // Open the modal
+    setEditingEvent(event);  
+    setIsModalOpen(true);  
   };
 
   // Close the modal after editing is done
   const handleCloseModal = () => {
-    setIsModalOpen(false);   // Close the modal
-    setEditingEvent(null);   // Clear the event being edited
+    setIsModalOpen(false);   
+    setEditingEvent(null);   
   };
 
   // Update the event in the list after successful edit
@@ -44,8 +44,8 @@ const EventList = ({ onEdit, onDelete }) => {
     const updatedEvents = events.map((event) =>
       event._id === updatedEvent._id ? updatedEvent : event
     );
-    setEvents(updatedEvents);  // Update the list of events
-    handleCloseModal();        // Close the modal
+    setEvents(updatedEvents);  
+    handleCloseModal();        
   };
 
   if (loading) {
